@@ -14,7 +14,7 @@ namespace Sokil\Vast\Creative;
 
 use Sokil\Vast\ElementBuilder;
 
-abstract class AbstractLinearCreative extends AbstractCreative
+abstract class AbstractCompanionAdsCreative extends AbstractCreative
 {
     /**
      * @var ElementBuilder

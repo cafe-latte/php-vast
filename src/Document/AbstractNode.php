@@ -104,7 +104,7 @@ abstract class AbstractNode
     {
         $domElements = $this->getDomElement()->getElementsByTagName($nodeName);
 
-        $values = [];
+        $values = array();
         for ($i = 0; $i < $domElements->length; $i++) {
             $values[$i] = $domElements->item($i)->nodeValue;
         }

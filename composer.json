@@ -1,10 +1,14 @@
 {
-    "name": "sokil/php-vast",
-    "description": "Generator and parser for VAST documents",
+    "name": "cafelatte/php-vast",
+    "description": "Generator and parser for VAST documents + add companion",
     "authors": [
         {
             "name": "Dmytro Sokil",
             "email": "dmytro.sokil@gmail.com"
+        },
+        {
+            "name": "thoprpe lee (koangbok lee)",
+            "email": "koangbok@gmail.com"
         }
     ],
     "license": "MIT",

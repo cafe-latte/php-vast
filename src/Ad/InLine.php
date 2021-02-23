@@ -12,8 +12,12 @@ declare(strict_types=1);
 
 namespace Sokil\Vast\Ad;
 
+use DOMElement;
+use Exception;
+use RuntimeException;
 use Sokil\Vast\Creative\AbstractCreative;
 use Sokil\Vast\Creative\InLine\Linear as InLineAdLinearCreative;
+use Sokil\Vast\Creative\InLine\CompanionAds as InLineAdCompanionAdsCreative;
 
 class InLine extends AbstractAdNode
 {
@@ -26,6 +30,11 @@ class InLine extends AbstractAdNode
      * @private
      */
     const CREATIVE_TYPE_LINEAR = 'Linear';
+
+    /**
+     * @private
+     */
+    const CREATIVE_TYPE_COMPANION_ADS = 'CompanionAds';
 
     /**
      * @return string
@@ -49,30 +58,35 @@ class InLine extends AbstractAdNode
         return $this;
     }
 
+
     /**
      * @return string[]
      */
     protected function getAvailableCreativeTypes(): array
     {
         return [
-            self::CREATIVE_TYPE_LINEAR,
+                self::CREATIVE_TYPE_LINEAR,
+                self::CREATIVE_TYPE_COMPANION_ADS
         ];
     }
 
     /**
      * @param string $type
-     * @param \DOMElement $creativeDomElement
+     * @param DOMElement $creativeDomElement
      *
      * @return AbstractCreative|InLineAdLinearCreative
      */
-    protected function buildCreativeElement(string $type, \DOMElement $creativeDomElement): AbstractCreative
+    protected function buildCreativeElement(string $type, DOMElement $creativeDomElement): AbstractCreative
     {
         switch ($type) {
             case self::CREATIVE_TYPE_LINEAR:
                 $creative = $this->vastElementBuilder->createInLineAdLinearCreative($creativeDomElement);
                 break;
+            case self::CREATIVE_TYPE_COMPANION_ADS:
+                $creative = $this->vastElementBuilder->createInLineCompanionAdsCreative($creativeDomElement);
+                break;
             default:
-                throw new \RuntimeException(sprintf('Unknown Wrapper creative type %s', $type));
+                throw new RuntimeException(sprintf('Unknown Wrapper creative type %s', $type));
         }
 
         return $creative;
@@ -81,14 +95,29 @@ class InLine extends AbstractAdNode
     /**
      * Create Linear creative
      *
-     * @throws \Exception
-     *
      * @return InLineAdLinearCreative
+     * @throws Exception
+     *
      */
     public function createLinearCreative(): InLineAdLinearCreative
     {
         /** @var InLineAdLinearCreative $creative */
         $creative = $this->buildCreative(self::CREATIVE_TYPE_LINEAR);
+
+        return $creative;
+    }
+
+    /**
+     * Create CompanionAds creative
+     *
+     * @return InLineAdCompanionAdsCreative
+     *
+     * @throws Exception
+     */
+    public function createCompanionAdsCreative(): InLineAdCompanionAdsCreative
+    {
+        /** @var InLineAdCompanionAdsCreative $creative */
+        $creative = $this->buildCreative(self::CREATIVE_TYPE_COMPANION_ADS);
 
         return $creative;
     }

@@ -13,9 +13,11 @@ declare(strict_types=1);
 namespace Sokil\Vast\Ad;
 
 use Sokil\Vast\Creative\AbstractCreative;
+use Sokil\Vast\Creative\InLine\CompanionAds as CompanionAdsCreative;
+use Sokil\Vast\Creative\InLine\Linear as InLineAdLinearCreative;
 use Sokil\Vast\Creative\Wrapper\Linear as WrapperAdLinearCreative;
 
-class Wrapper extends AbstractAdNode
+class CompanionAds extends AbstractAdNode
 {
     /**
      * @public
@@ -25,7 +27,7 @@ class Wrapper extends AbstractAdNode
     /**
      * @private
      */
-    const CREATIVE_TYPE_LINEAR = 'Linear';
+    const CREATIVE_TYPE_COMPANION_ADS = 'CompanionAds';
 
     /**
      * @return string
@@ -55,7 +57,7 @@ class Wrapper extends AbstractAdNode
     protected function getAvailableCreativeTypes(): array
     {
         return [
-                self::CREATIVE_TYPE_LINEAR,
+            self::CREATIVE_TYPE_COMPANION_ADS,
         ];
     }
 
@@ -68,8 +70,8 @@ class Wrapper extends AbstractAdNode
     protected function buildCreativeElement(string $type, \DOMElement $creativeDomElement): AbstractCreative
     {
         switch ($type) {
-            case self::CREATIVE_TYPE_LINEAR:
-                $creative = $this->vastElementBuilder->createWrapperAdLinearCreative($creativeDomElement);
+            case self::CREATIVE_TYPE_COMPANION_ADS:
+              $creative = $this->vastElementBuilder->createInLineCompanionAdsAdLinearCreative($creativeDomElement);
                 break;
             default:
                 throw new \RuntimeException(sprintf('Unknown Wrapper creative type %s', $type));
@@ -78,18 +80,11 @@ class Wrapper extends AbstractAdNode
         return $creative;
     }
 
-    /**
-     * Create Linear creative
-     *
-     * @return WrapperAdLinearCreative
-     *
-     * @throws \Exception
-     */
-    public function createLinearCreative(): WrapperAdLinearCreative
+    public function createCompanionAdsCreative(): CompanionAdsCreative
     {
-        /** @var WrapperAdLinearCreative $creative */
-        $creative = $this->buildCreative(self::CREATIVE_TYPE_LINEAR);
+      /** @var InLineAdLinearCreative $creative */
+      $creative = $this->buildCreative(self::CREATIVE_TYPE_COMPANION_ADS);
 
-        return $creative;
+      return $creative;
     }
 }

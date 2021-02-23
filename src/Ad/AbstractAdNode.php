@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Sokil\Vast\Ad;
 
+use DOMElement;
 use Sokil\Vast\Creative\AbstractCreative;
 use Sokil\Vast\Document\AbstractNode;
 use Sokil\Vast\ElementBuilder;
@@ -19,7 +20,7 @@ use Sokil\Vast\ElementBuilder;
 abstract class AbstractAdNode extends AbstractNode
 {
     /**
-     * @var \DOMElement
+     * @var DOMElement
      */
     private $domElement;
 
@@ -29,7 +30,7 @@ abstract class AbstractAdNode extends AbstractNode
     protected $vastElementBuilder;
 
     /**
-     * @var \DOMElement
+     * @var DOMElement
      */
     private $adDomElement;
 
@@ -41,20 +42,20 @@ abstract class AbstractAdNode extends AbstractNode
     private $creatives = [];
 
     /**
-     * @var \DomElement
+     * @var DomElement
      */
     private $creativesDomElement;
 
     /**
-     * @var \DomElement
+     * @var DomElement
      */
     private $extensionsDomElement;
 
     /**
-     * @param \DOMElement $adDomElement instance of \Vast\Ad element
+     * @param DOMElement $adDomElement instance of \Vast\Ad element
      * @param ElementBuilder $vastElementBuilder
      */
-    public function __construct(\DOMElement $adDomElement, ElementBuilder $vastElementBuilder)
+    public function __construct(DOMElement $adDomElement, ElementBuilder $vastElementBuilder)
     {
         $this->adDomElement = $adDomElement;
         $this->domElement = $this->adDomElement->getElementsByTagName($this->getAdSubElementTagName())->item(0);
@@ -71,9 +72,9 @@ abstract class AbstractAdNode extends AbstractNode
     /**
      * Instance of "\Vast\Ad\(InLine|Wrapper)" element
      *
-     * @return \DOMElement
+     * @return DOMElement
      */
-    protected function getDomElement(): \DOMElement
+    protected function getDomElement(): DOMElement
     {
         return $this->domElement;
     }
@@ -147,9 +148,7 @@ abstract class AbstractAdNode extends AbstractNode
      */
     public function getAdSystem(): string
     {
-        $adSystem = $this->getScalarNodeValue('AdSystem');
-
-        return $adSystem;
+        return $this->getScalarNodeValue('AdSystem');
     }
 
     /**
@@ -161,20 +160,20 @@ abstract class AbstractAdNode extends AbstractNode
      * Build object for creative of given type
      *
      * @param string $type
-     * @param \DOMElement $creativeDomElement
+     * @param DOMElement $creativeDomElement
      *
      * @return AbstractCreative
      */
-    abstract protected function buildCreativeElement(string $type, \DOMElement $creativeDomElement): AbstractCreative;
+    abstract protected function buildCreativeElement(string $type, DOMElement $creativeDomElement): AbstractCreative;
 
     /**
      * Create "creative" object of given type
      *
      * @param string $type
      *
+     * @return AbstractCreative
      * @throws \Exception
      *
-     * @return AbstractCreative
      */
     final protected function buildCreative(string $type): AbstractCreative
     {
@@ -209,7 +208,7 @@ abstract class AbstractAdNode extends AbstractNode
         return $creative;
     }
 
-        /**
+    /**
      * Add Error tracking url.
      * Allowed multiple error elements.
      *
@@ -248,15 +247,15 @@ abstract class AbstractAdNode extends AbstractNode
      */
     public function addImpression(string $url, string $id = null): self
     {
-        $attributes = [];
+        $attributes = array();
         if ($id !== null) {
             $attributes['id'] = $id;
         }
 
         $this->addCdataNode(
-            'Impression',
-            $url,
-            $attributes
+                'Impression',
+                $url,
+                $attributes
         );
 
         return $this;

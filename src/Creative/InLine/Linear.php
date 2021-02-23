@@ -69,10 +69,7 @@ class Linear extends AbstractLinearCreative
             $this->mediaFilesDomElement = $this->getDomElement()->getElementsByTagName('MediaFiles')->item(0);
             if (!$this->mediaFilesDomElement) {
                 $this->mediaFilesDomElement = $this->getDomElement()->ownerDocument->createElement('MediaFiles');
-                $this->getDomElement()
-                    ->getElementsByTagName('Linear')
-                    ->item(0)
-                    ->appendChild($this->mediaFilesDomElement);
+                $this->getDomElement()->getElementsByTagName('Linear')->item(0)->appendChild($this->mediaFilesDomElement);
             }
         }
 
@@ -89,7 +86,9 @@ class Linear extends AbstractLinearCreative
 
         // create MediaFile and append to MediaFiles
         $mediaFileDomElement = $mediaFilesDomElement->ownerDocument->createElement('MediaFile');
-        $mediaFilesDomElement->appendChild($mediaFileDomElement);
+
+
+      $mediaFilesDomElement->appendChild($mediaFileDomElement);
 
         // object
         return $this->vastElementBuilder->createInLineAdLinearCreativeMediaFile($mediaFileDomElement);

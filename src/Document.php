@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Sokil\Vast;
 
+use DOMDocument;
 use Sokil\Vast\Ad\AbstractAdNode;
 use Sokil\Vast\Ad\InLine;
 use Sokil\Vast\Ad\Wrapper;
@@ -20,7 +21,7 @@ use Sokil\Vast\Document\AbstractNode;
 class Document extends AbstractNode
 {
     /**
-     * @var \DOMDocument
+     * @var DOMDocument
      */
     private $domDocument;
 
@@ -34,12 +35,12 @@ class Document extends AbstractNode
      *
      * @var AbstractAdNode[]
      */
-    private $vastAdNodeList = [];
+    private $vastAdNodeList = array();
 
     /**
-     * @param \DOMDocument $DOMDocument
+     * @param DOMDocument $DOMDocument
      */
-    public function __construct(\DOMDocument $DOMDocument, ElementBuilder $vastElementBuilder)
+    public function __construct(DOMDocument $DOMDocument, ElementBuilder $vastElementBuilder)
     {
         $this->domDocument = $DOMDocument;
         $this->vastElementBuilder = $vastElementBuilder;
@@ -66,9 +67,9 @@ class Document extends AbstractNode
     /**
      * Get DomDocument object
      *
-     * @return \DomDocument
+     * @return DomDocument
      */
-    public function toDomDocument(): \DOMDocument
+    public function toDomDocument(): DOMDocument
     {
         return $this->domDocument;
     }
@@ -85,7 +86,7 @@ class Document extends AbstractNode
     private function createAdSection($type): AbstractAdNode
     {
         // Check Ad type
-        if (!in_array($type, [InLine::TAG_NAME, Wrapper::TAG_NAME])) {
+        if (!in_array($type, array(InLine::TAG_NAME, Wrapper::TAG_NAME))) {
             throw new \InvalidArgumentException(sprintf('Ad type %s not supported', $type));
         }
 

@@ -12,12 +12,17 @@ declare(strict_types=1);
 
 namespace Sokil\Vast;
 
+use DomDocument;
+use DomElement;
 use Sokil\Vast\Ad\InLine;
 use Sokil\Vast\Ad\Wrapper;
 use Sokil\Vast\Creative\InLine\Linear as InLineAdLinearCreative;
-use Sokil\Vast\Creative\Wrapper\Linear as WrapperAdLinearCreative;
 use Sokil\Vast\Creative\InLine\Linear\MediaFile;
 use Sokil\Vast\Creative\InLine\Linear\ClosedCaptionFile;
+use Sokil\Vast\Creative\Wrapper\Linear as WrapperAdLinearCreative;
+use Sokil\Vast\Creative\InLine\CompanionAds as InLineCompanionAdsCreative;
+use Sokil\Vast\Creative\InLine\CompanionAds\Companion;
+
 
 /**
  * Builder of VAST document elements, useful for overriding element classes
@@ -27,26 +32,26 @@ class ElementBuilder
     /**
      * <?xml> with <VAST> inside
      *
-     * @param \DomDocument $xmlDocument
+     * @param DomDocument $xmlDocument
      *
      * @return Document
      */
-    public function createDocument(\DomDocument $xmlDocument): Document
+    public function createDocument(DomDocument $xmlDocument): Document
     {
         return new Document(
-            $xmlDocument,
-            $this
+                $xmlDocument,
+                $this
         );
     }
 
     /**
      * <Ad> with <InLine> inside
      *
-     * @param \DomElement $adElement
+     * @param DomElement $adElement
      *
      * @return InLine
      */
-    public function createInLineAdNode(\DomElement $adElement): InLine
+    public function createInLineAdNode(DomElement $adElement): InLine
     {
         return new InLine($adElement, $this);
     }
@@ -54,11 +59,11 @@ class ElementBuilder
     /**
      * <Ad> with <Wrapper> inside
      *
-     * @param \DomElement $adElement
+     * @param DomElement $adElement
      *
      * @return Wrapper
      */
-    public function createWrapperAdNode(\DomElement $adElement): Wrapper
+    public function createWrapperAdNode(DomElement $adElement): Wrapper
     {
         return new Wrapper($adElement, $this);
     }
@@ -66,23 +71,32 @@ class ElementBuilder
     /**
      * <Ad><InLine><Creatives><Creative> with <Linear> inside
      *
-     * @param \DOMElement $creativeDomElement
+     * @param DOMElement $creativeDomElement
      *
      * @return InLineAdLinearCreative
      */
-    public function createInLineAdLinearCreative(\DOMElement $creativeDomElement): InLineAdLinearCreative
+    public function createInLineAdLinearCreative(DOMElement $creativeDomElement): InLineAdLinearCreative
     {
         return new InLineAdLinearCreative($creativeDomElement, $this);
     }
 
     /**
+     * @param DomElement $creativeDomElement
+     * @return InLineCompanionAdsCreative
+     */
+    public function createInLineCompanionAdsCreative(DOMElement $creativeDomElement): InLineCompanionAdsCreative
+    {
+        return new InLineCompanionAdsCreative($creativeDomElement, $this);
+    }
+
+    /**
      * <Ad><Wrapper><Creatives><Creative> with <Linear> inside
      *
-     * @param \DOMElement $creativeDomElement
+     * @param DOMElement $creativeDomElement
      *
      * @return WrapperAdLinearCreative
      */
-    public function createWrapperAdLinearCreative(\DOMElement $creativeDomElement): WrapperAdLinearCreative
+    public function createWrapperAdLinearCreative(DOMElement $creativeDomElement): WrapperAdLinearCreative
     {
         return new WrapperAdLinearCreative($creativeDomElement, $this);
     }
@@ -90,23 +104,32 @@ class ElementBuilder
     /**
      * <Ad><InLine><Creatives><Creative><Linear><MediaFiles><MediaFile>
      *
-     * @param \DOMElement $mediaFileDomElement
+     * @param DOMElement $mediaFileDomElement
      *
      * @return MediaFile
      */
-    public function createInLineAdLinearCreativeMediaFile(\DOMElement $mediaFileDomElement): MediaFile
+    public function createInLineAdLinearCreativeMediaFile(DOMElement $mediaFileDomElement): MediaFile
     {
         return new MediaFile($mediaFileDomElement);
     }
-    
+
+    /**
+     * @param DOMElement $companionDomElement
+     * @return Companion
+     */
+    public function createInLineAdCompanionAdsCreativeCompanion(DOMElement $companionDomElement): Companion
+    {
+        return new Companion($companionDomElement);
+    }
+
     /**
      * <Ad><InLine><Creatives><Creative><Linear><MediaFiles><ClosedCaptionFiles><ClosedCaptionFile>
      *
-     * @param \DOMElement $mediaFileDomElement
+     * @param DOMElement $mediaFileDomElement
      *
      * @return ClosedCaptionFile
      */
-    public function createInLineAdLinearCreativeClosedCaptionFile(\DOMElement $mediaFileDomElement): ClosedCaptionFile
+    public function createInLineAdLinearCreativeClosedCaptionFile(DOMElement $mediaFileDomElement): ClosedCaptionFile
     {
         return new ClosedCaptionFile($mediaFileDomElement);
     }
