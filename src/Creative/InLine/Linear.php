@@ -88,7 +88,7 @@ class Linear extends AbstractLinearCreative
         $mediaFileDomElement = $mediaFilesDomElement->ownerDocument->createElement('MediaFile');
 
 
-      $mediaFilesDomElement->appendChild($mediaFileDomElement);
+        $mediaFilesDomElement->appendChild($mediaFileDomElement);
 
         // object
         return $this->vastElementBuilder->createInLineAdLinearCreativeMediaFile($mediaFileDomElement);

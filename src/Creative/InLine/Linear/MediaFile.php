@@ -112,6 +112,13 @@ class MediaFile
         return $this;
     }
 
+    public function setId(string $id): self
+    {
+      $this->domElement->setAttribute('id', $id);
+      return $this;
+    }
+
+
     /**
      * @param string $url
      *

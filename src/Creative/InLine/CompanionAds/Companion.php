@@ -12,23 +12,22 @@ declare(strict_types=1);
 
 namespace Sokil\Vast\Creative\InLine\CompanionAds;
 
-use DomElement;
-
 class Companion
 {
 
     /**
-     * @var DomElement
+     * @var \DomElement
      */
     private $domElement;
 
     /**
-     * @param DomElement $domElement
+     * @param \DomElement $domElement
      */
-    public function __construct(DomElement $domElement)
+    public function __construct(\DomElement $domElement)
     {
         $this->domElement = $domElement;
     }
+
 
     /**
      * @param string $value
@@ -40,6 +39,7 @@ class Companion
         return $this;
     }
 
+
     /**
      * @param string $value
      * @return $this
@@ -49,6 +49,7 @@ class Companion
         $this->domElement->setAttribute('creativeType', $value);
         return $this;
     }
+
 
     /**
      * @param string $value
