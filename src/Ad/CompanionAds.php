@@ -10,81 +10,166 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sokil\Vast\Ad;
+namespace Sokil\Vast\Creative\InLine;
 
-use Sokil\Vast\Creative\AbstractCreative;
-use Sokil\Vast\Creative\InLine\CompanionAds as CompanionAdsCreative;
-use Sokil\Vast\Creative\InLine\Linear as InLineAdLinearCreative;
-use Sokil\Vast\Creative\Wrapper\Linear as WrapperAdLinearCreative;
 
-class CompanionAds extends AbstractAdNode
+use Sokil\Vast\Creative\AbstractCompanionAdsCreative;
+use Sokil\Vast\Creative\InLine\CompanionAds\Companion;
+
+class CompanionAds extends AbstractCompanionAdsCreative
 {
-    /**
-     * @public
-     */
-    const TAG_NAME = 'Wrapper';
+  /**
+   * @var \DOMElement
+   */
+  private $mediaFilesDomElement;
 
-    /**
-     * @private
-     */
-    const CREATIVE_TYPE_COMPANION_ADS = 'CompanionAds';
+  /**
+   * @var \DOMElement
+   */
+  private $closedCaptionFilesDomElement;
 
-    /**
-     * @return string
-     */
-    public function getAdSubElementTagName(): string
-    {
-        return self::TAG_NAME;
+  /**
+   * @var \DOMElement
+   */
+  private $adParametersDomElement;
+
+  /**
+   * @return \DOMElement
+   */
+  private function getCompanionElement(): \DOMElement
+  {
+    if (empty($this->companionAdsDomElement)) {
+      $this->companionAdsDomElement = $this->getDomElement()->getElementsByTagName('Companion')->item(0);
+      if (!$this->companionAdsDomElement) {
+        $this->companionAdsDomElement = $this->getDomElement()->ownerDocument->createElement('Companion');
+        $this->getDomElement()->getElementsByTagName('CompanionAds')->item(0)->appendChild($this->companionAdsDomElement);
+      }
     }
 
-    /**
-     * URI of ad tag of downstream Secondary Ad Server
-     *
-     * @param string $uri
-     *
-     * @return Wrapper
-     */
-    public function setVASTAdTagURI(string $uri): self
-    {
-        $this->setScalarNodeCdata('VASTAdTagURI', $uri);
+    return $this->companionAdsDomElement;
+  }
 
-        return $this;
+  /**
+   * @return \DOMElement
+   */
+  private function getCompanionsTrackingEventsElement(): \DOMElement
+  {
+    if (empty($this->mediaFilesDomElement)) {
+      $this->mediaFilesDomElement = $this->getDomElement()->getElementsByTagName('TrackingEvents')->item(0);
+      if (!$this->mediaFilesDomElement) {
+        $this->mediaFilesDomElement = $this->getDomElement()->ownerDocument->createElement('TrackingEvents');
+        $this->getDomElement()->getElementsByTagName('Companion')->item(0)->appendChild($this->mediaFilesDomElement);
+      }
     }
 
-    /**
-     * @return string[]
-     */
-    protected function getAvailableCreativeTypes(): array
-    {
-        return [
-            self::CREATIVE_TYPE_COMPANION_ADS,
-        ];
-    }
+    return $this->mediaFilesDomElement;
+  }
 
-    /**
-     * @param string $type
-     * @param \DOMElement $creativeDomElement
-     *
-     * @return AbstractCreative|WrapperAdLinearCreative
-     */
-    protected function buildCreativeElement(string $type, \DOMElement $creativeDomElement): AbstractCreative
-    {
-        switch ($type) {
-            case self::CREATIVE_TYPE_COMPANION_ADS:
-              $creative = $this->vastElementBuilder->createInLineCompanionAdsAdLinearCreative($creativeDomElement);
-                break;
-            default:
-                throw new \RuntimeException(sprintf('Unknown Wrapper creative type %s', $type));
-        }
+  /**
+   * @return MediaFile
+   */
+  public function createCompanion(): Companion
+  {
+    $companionsDomElement = $this->getCompanionElement();
 
-        return $creative;
-    }
+    $companionDomElement = $companionsDomElement->ownerDocument->createElement('StaticResource');
+    $companionsDomElement->appendChild($companionDomElement);
 
-    public function createCompanionAdsCreative(): CompanionAdsCreative
-    {
-      /** @var InLineAdLinearCreative $creative */
-      $creative = $this->buildCreative(self::CREATIVE_TYPE_COMPANION_ADS);
+    return $this->vastElementBuilder->createInLineAdCompanionAdsCreativeCompanion($companionDomElement);
+  }
 
-      return $creative;
-    }
+  /**
+   * @return Companion
+   */
+  public function createTrackingEvents(): Companion
+  {
+    $companionsDomElement = $this->getCompanionElement();
+
+    $companionDomElement = $companionsDomElement->ownerDocument->createElement('TrackingEvents');
+    $companionsDomElement->appendChild($companionDomElement);
+
+    return $this->vastElementBuilder->createInLineAdCompanionAdsCreativeCompanion($companionDomElement);
+  }
+
+  /**
+   * @param $event
+   * @return Companion
+   */
+  public function createTrackingEventAdd($event): Companion
+  {
+    $companionsDomElement = $this->getCompanionsTrackingEventsElement();
+
+    $companionDomElement = $companionsDomElement->ownerDocument->createElement('Tracking');
+    $companionsDomElement->appendChild($companionDomElement);
+    $companionDomElement->setAttribute('event', $event);
+
+    return $this->vastElementBuilder->createInLineAdCompanionAdsCreativeCompanion($companionDomElement);
+  }
+
+
+
+  /**
+   * @return Companion
+   */
+  public function createCompanionClickThrough(): Companion
+  {
+    $companionsDomElement = $this->getCompanionElement();
+
+    $companionDomElement = $companionsDomElement->ownerDocument->createElement('CompanionClickThrough');
+    $companionsDomElement->appendChild($companionDomElement);
+
+    return $this->vastElementBuilder->createInLineAdCompanionAdsCreativeCompanion($companionDomElement);
+  }
+
+  /**
+   * @return Companion
+   */
+  public function createCompanionHtmlResource(): Companion
+  {
+    $companionsDomElement = $this->getCompanionElement();
+
+    $companionDomElement = $companionsDomElement->ownerDocument->createElement('HTMLResource');
+    $companionsDomElement->appendChild($companionDomElement);
+
+    return $this->vastElementBuilder->createInLineAdCompanionAdsCreativeCompanion($companionDomElement);
+  }
+
+
+  /**
+   * Set 'id' attribute of 'creative' element
+   *
+   * @param string $id
+   *
+   * @return Linear
+   */
+  public function setId(string $id): self
+  {
+    $this->getDomElement()->setAttribute('id', $id);
+
+    return $this;
+  }
+
+  /**
+   * @param string $value
+   * @return $this
+   */
+  public function setWidth(string $value): self
+  {
+    $this->getCompanionElement()->setAttribute('width', $value);
+
+    return $this;
+  }
+
+  /**
+   * @param string $value
+   * @return $this
+   */
+  public function setHeight(string $value): self
+  {
+    $this->getCompanionElement()->setAttribute('height', $value);
+
+    return $this;
+  }
+
+
 }
